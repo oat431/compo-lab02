@@ -1,6 +1,5 @@
-app.component('review-form', {
-    template:
-        `
+app.component("review-form", {
+  template: `
         <form class="review-form" @submit.prevent="onSubmit">
             <h3>Leave a review</h3>
             <label for="name">Name:</label>
@@ -15,41 +14,49 @@ app.component('review-form', {
                 <option>2</option>
                 <option>1</option>
             </select>
-            <label for="name">Say yes if you wanna recommand this product</label>
-            <input id="name" v-model="recommend" />
+            <label for="recommend">Say yes if you wanna recommand this product</label>
+            <select id="recommend" v-model="recommend">
+                <option>Yes</option>
+                <option>No</option>
+            </select>
             <input type="submit" class="button" value="Submit" />
         </form>
     `,
 
-    data() {
-        return {
-            name: '',
-            review: '',
-            rating: null,
-            recommend: ''
-        }
+  data() {
+    return {
+      name: "",
+      review: "",
+      rating: null,
+      recommend: "",
+    };
+  },
+
+  methods: {
+    onSubmit() {
+      if (
+        this.name === "" ||
+        this.review === "" ||
+        this.rating === "" ||
+        this.recommend === ""
+      ) {
+        alert("missing fields");
+        return;
+      }
+
+      let productReview = {
+        name: this.name,
+        review: this.review,
+        rating: this.rating,
+        recommend: this.recommend,
+      };
+
+      this.$emit("review-submitted", productReview);
+
+      this.name = "";
+      this.review = "";
+      this.rating = null;
+      this.recommend = "";
     },
-
-    methods: {
-        onSubmit() {
-            if (this.name === '' || this.review === '' || this.rating === '' || this.recommend === '') {
-                alert('missing fields')
-                return
-            }
-
-            let productReview = {
-                name: this.name,
-                review: this.review,
-                rating: this.rating,
-                recommend: this.recommend
-            }
-
-            this.$emit('review-submitted', productReview)
-
-            this.name = ''
-            this.review = ''
-            this.rating = null
-            this.recommend = ''
-        }
-    },
-})
+  },
+});
