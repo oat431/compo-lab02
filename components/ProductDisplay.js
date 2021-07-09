@@ -30,7 +30,20 @@ app.component('product-display',{
                         :style="{backgroundColor:variant.color}"
                     ></div>
 
-                    <button class=" button " :disabled="!inStock" :class="{disabledButton : !inStock}" @click="addToCart ">Add to Cart</button>
+                    <button 
+                        class=" button " 
+                        :disabled="!inStock" 
+                        :class="{disabledButton : !inStock}" 
+                        @click="addToCart ">
+                        Add to Cart
+                    </button>
+                    <button 
+                        class=" button " 
+                        :disabled="!inStock" 
+                        :class="{disabledButton : !inStock}" 
+                        @click="removeFromCart">
+                        remove item
+                    </button>
                 </div>
             </div>
         </div>
@@ -46,13 +59,14 @@ app.component('product-display',{
                 { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity:0 ,onSale:false}
             ],
             selectedVariant:0,
-            cart: 0
-
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart',this.variants[this.selectedVariant].id)
+        },
+        removeFromCart() {
+            this.$emit('remove-from-cart',this.variants[this.selectedVariant].id)
         },
         updateImage(variantImage) {
             this.image = variantImage
