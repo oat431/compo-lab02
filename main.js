@@ -3,7 +3,6 @@ const app = Vue.createApp({
         return {
             cart: 0,
             premium:true,
-            details: 'You got something I need In this world full of people that want killing me'
         }
     },
     methods: {
