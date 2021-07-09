@@ -18,6 +18,7 @@ app.component('product-display',{
                     <p v-else-if="inventory <= 10 && inventory > 0">In Stock</p>
                     <p v-else>Out of Stock</p>
                     <p>Shipping: {{shipping}}</p>                    
+                    <p>Remain : {{ inStock }} </p>
 
                     <ul>
                         <li v-for="detail in details">{{ detail }}</li>
@@ -39,15 +40,15 @@ app.component('product-display',{
                     </button>
                     <button 
                         class=" button " 
-                        :disabled="!inStock" 
-                        :class="{disabledButton : !inStock}" 
+                        :disabled="Max===inStock" 
+                        :class="{disabledButton : Max===inStock}" 
                         @click="removeFromCart">
                         remove item
                     </button>
                 </div>
             </div>
         </div>
-        <review-list : v-if="reviews.length" :reviews="reviews"></review-list>
+        <review-list :v-if="reviews.length" :reviews="reviews"></review-list>
         <review-form @review-submitted="addReview"></review-form>
     </div>`,
     data() {
@@ -57,7 +58,7 @@ app.component('product-display',{
             inventory: 100,
             details: ['50% cotton', '30% wool', '20% polyester'],
             variants: [
-                { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity:50 ,onSale:true},
+                { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity:5 ,onSale:true ,max:5},
                 { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity:0 ,onSale:false}
             ],
             selectedVariant:0,
@@ -67,9 +68,14 @@ app.component('product-display',{
     methods: {
         addToCart() {
             this.$emit('add-to-cart',this.variants[this.selectedVariant].id)
+            this.variants[this.selectedVariant].quantity -= 1
         },
         removeFromCart() {
             this.$emit('remove-from-cart',this.variants[this.selectedVariant].id)
+            if(this.variants[this.selectedVariant].quantity < this.variants[this.selectedVariant].max){
+                this.variants[this.selectedVariant].quantity += 1
+            } 
+            
         },
         updateImage(variantImage) {
             this.image = variantImage
@@ -96,6 +102,9 @@ app.component('product-display',{
         },
         shipping(){
             return this.premium ? 'Free' : 30
+        },
+        Max(){
+            return this.variants[this.selectedVariant].max
         }
     }
 })
